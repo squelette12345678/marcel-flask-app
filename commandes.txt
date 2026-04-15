@@ -1,2 +1,15 @@
-docker build -t mon_nom-flask-app .
-docker run -d -p 5000:5000 --name mon_nom_container mon_nom-flask-app
+docker build -t marcel-flask-app .
+docker run -d -p 5000:5000 --name marcel_container marcel-flask-app
+ docker tag marcel-flask-app marcel222/marcel-flask-app:latest 
+docker login     
+docker push marcel222/marcel-flask-app:latest
+git commit -m "TP1 Docker Flask"  
+git init 
+git add 
+git commit -m "TP1 Docker Flask"   
+git branch -M main    
+git remote add origin https://github.com/squelette12345678/marcel-flask-app.gi
+git push -u origin main
+docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts    
+ docker compose up -d  
+docker ps 
