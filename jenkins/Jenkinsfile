@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "votre_dockerhub/mon_nom-flask-app"
+        IMAGE_TAG = "latest"
+    }
+
+    stages {
+        stage('Clonage') {
+            steps {
+                git branch: 'main', url: 'https://github.com/votre_compte/mon_nom-flask-app.git'
+            }
+        }
+
+        stage('Image') {
+            steps {
+                bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
+            }
+        }
+
+        stage('Publication') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                    bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
+                }
+            }
+        }
+    }
+}

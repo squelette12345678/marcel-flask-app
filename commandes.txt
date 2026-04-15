@@ -1,0 +1,2 @@
+docker build -t mon_nom-flask-app .
+docker run -d -p 5000:5000 --name mon_nom_container mon_nom-flask-app
