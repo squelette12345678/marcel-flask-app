@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: unless-stopped
+    networks:
+      - pritunl-net
+    volumes:
+      - mongo_data:/data/db
+
+  pritunl:
+    image: pritunl/pritunl:latest
+    container_name: pritunl
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    privileged: true
+    ports:
+      - "80:80"
+      - "443:443"
+      - "1194:1194/udp"
+      - "1194:1194/tcp"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/pritunl
+    networks:
+      - pritunl-net
+    volumes:
+      - pritunl_data:/var/lib/pritunl
+
+networks:
+  pritunl-net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  pritunl_data:
